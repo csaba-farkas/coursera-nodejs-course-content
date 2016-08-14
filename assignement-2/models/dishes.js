@@ -42,13 +42,14 @@ var dishSchema = new Schema({
         required: true,
     },
     label: {
-      type: String,
-      required: false,
-      default: ""
+        type: String,
+        required: false,
+        default: ""
     },
     price: {
-      type: Currency,
-      required: true
+        type: Currency,
+        required: true,
+        min: 0
     },
     description: {
         type: String,   //description type

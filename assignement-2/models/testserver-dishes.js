@@ -17,8 +17,7 @@ db.once('open', function() {
           name: 'Csaba\'s Gulyas',
           image: 'images/gulyas.jpg',
           category: 'main',
-          label: 'Hungarian',
-          price: '799',
+          price: "$7.99",
           description: 'Best gulyas ever',
           comments: [
             {
@@ -38,12 +37,14 @@ db.once('open', function() {
           //Log message and new dish created
           console.log('Dish created');
           console.log(dish);
+          console.log("Price formatted: " + dish.price.toFixed(2));
 
           var id = dish._id;
 
           Dishes.findByIdAndUpdate(id, {
             $set: {
-                description: 'Officially the best gulyas ever'
+                description: 'Officially the best gulyas ever',
+                label: 'Hungarian'
               }
             }, {
                 new: true
