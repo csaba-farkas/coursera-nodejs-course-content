@@ -49,7 +49,8 @@ db.once('open', function() {
             Dishes.findByIdAndUpdate(id, {
                     //$set contains the field names and values that are to be updated.
                     $set: {
-                        description: 'Updated Test'
+                        description: 'Updated Test',
+                        
                     }
                 }, {
                     //When we call the 'findByIdAndUpdate' we can ask the function to return
