@@ -1,5 +1,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+
+var Promotions = require('../models/promotions');
+
+var INFO = 'INFO: ';
 
 //Express router
 var promotionsRouter = express.Router();
@@ -7,35 +12,61 @@ promotionsRouter.use(bodyParser.json());
 
 //Use promotionsRouter to route to all the resources
 promotionsRouter.route('/')
-.all(function(req, res, next) {
-    res.writeHead(200, {'Content-Type' : 'text/plain'});
-    next(); 
- })
 .get(function(req, res, next) {
-    res.end('Will send all the promotions to you');
+    Promotions.find({}, function(err, promotion) {
+        if(err) throw err;
+        res.json(promotion);
+        console.log(INFO + 'Returned all promotions');
+    });
 })
 .post(function(req, res, next) {
-    res.end('Will add the promotion: ' + req.body.name + ' with details: ' + req.body.description);  
+    Promotions.create(req.body, function(err, promotion) {
+        if(err) throw err;
+
+        var id = promotion._id;
+        res.writeHead(201, {
+            'Content-Type':'text/plain'
+        });
+        res.end(INFO + 'Promotion ' + id + ' was added to the database');
+        console.log(INFO + 'Promotion ' + id + ' was added to the database');
+    });
 })
 .delete(function(req, res, next) {
-    res.end('Deleting all promotions');
+    Promotions.remove({}, function(err, resp) {
+        if(err) throw err;
+        res.json(resp);
+        console.log(INFO + 'All promotions were removed');
+    });
 });
 
 //Use promotionsRouter to route to particular resources
 promotionsRouter.route('/:promotionId')
-.all(function(req, res, next) {
-    res.writeHead(200, {'Content-Type':'text/plain'});
-    next();
-})
 .get(function(req, res, next) {
-    res.end('Will send details of the promotion: ' + req.params.promotionId + ' to you.');
+    Promotions.find(req.params.promotionId, funciton(err, promotion) {
+        if(err) throw err;
+
+        res.json(promotion);
+        console.log(INFO + 'Promotion ' + req.params.promotionId + ' was returned');
+    })
 })
 .put(function(req, res, next) {
-    res.write('Updating promotion: ' + req.params.promotionId + '\n');
-    res.end('New promotion: ' + req.body.name + ', details: ' + req.body.description);
+    Promotions.findByIdAndUpdate(req.params.leaderId, {
+        $set: req.body;
+    }, {
+        new: true;
+    }, function(err, promotion) {
+        if(err) throw err;
+
+        res.json(promotion);
+        console.log(INFO + 'Promotion ' + req.params.leaderId + ' was updated');
+    });
 })
 .delete(function(req, res, next) {
-    res.end('Deleting promotion: ' + req.params.promotionId);
-}); 
+    Promotions.findByIdAndRemove(req.params.promotionId, function(err, resp) {
+        if(err) throw err;
+        res.json(resp);
+        console.log(INFO + 'Deleted promotion with id ' + req.params.promotionId);
+    });
+});
 
 module.exports = promotionsRouter;

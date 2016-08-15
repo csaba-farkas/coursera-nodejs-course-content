@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 //Require the leadership model from 'models' folder
 var Leaders = require('../models/leadershipRouter');
 
+var INFO = 'INFO: ';
 
 //Express router
 var leaderRouter = express.Router();
@@ -17,6 +18,7 @@ leaderRouter.route('/')
     Leaders.find({}, function(err, leader) {
         if(err) throw err;
         res.json(leader);
+        console.log(INFO + 'Leaders returned');
     });
 })
 .post(function(req, res, next) {
@@ -30,7 +32,7 @@ leaderRouter.route('/')
         res.writeHead(201, {
             'Content-Type':'text/plain'
         });
-        console.log('Added the leader with id: ' + id);
+        console.log(INFO + 'Added the leader with id: ' + id);
     });
 })
 .delete(function(req, res, next) {
@@ -38,6 +40,7 @@ leaderRouter.route('/')
     Leaders.remove({}, function(err, resp) {
         if(err) throw err;
         res.json(resp);
+        console.log(INFO + 'Removed all leaders');
     });
 });
 
@@ -48,6 +51,7 @@ leaderRouter.route('/:leaderId')
     Dishes.findById(req.params.leaderId, function(err, leader) {
         if(err) throw err;
         res.json(leader);
+        console.log(INFO + 'Returned leader with id ' + req.params.leaderId);
     });
 })
 .put(function(req, res, next) {
@@ -59,6 +63,7 @@ leaderRouter.route('/:leaderId')
     }, function(err, leader) {
         if(err) throw err;
         res.json(leader);
+        console.log(INFO + 'Updated leader with id ' + req.params.leaderId);
     });
 })
 .delete(function(req, res, next) {
@@ -66,6 +71,7 @@ leaderRouter.route('/:leaderId')
     Leaders.findByIdAndRemove(req.params.leaderId, function(err, resp) {
         if(err) throw err;
         res.json(resp);
+        console.log(INFO + 'Deleted leader with id ' + req.params.leaderId);
     });
 });
 
