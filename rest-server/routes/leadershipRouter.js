@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 //Require the leadership model from 'models' folder
-var Leaders = require('../models/leadershipRouter');
+var Leaders = require('../models/leadership');
 
 var INFO = 'INFO: ';
 

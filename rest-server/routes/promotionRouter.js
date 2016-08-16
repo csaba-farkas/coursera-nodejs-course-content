@@ -42,18 +42,18 @@ promotionsRouter.route('/')
 //Use promotionsRouter to route to particular resources
 promotionsRouter.route('/:promotionId')
 .get(function(req, res, next) {
-    Promotions.find(req.params.promotionId, funciton(err, promotion) {
+    Promotions.find(req.params.promotionId, function(err, promotion) {
         if(err) throw err;
 
         res.json(promotion);
         console.log(INFO + 'Promotion ' + req.params.promotionId + ' was returned');
-    })
+    });
 })
 .put(function(req, res, next) {
     Promotions.findByIdAndUpdate(req.params.leaderId, {
-        $set: req.body;
+        $set: req.body
     }, {
-        new: true;
+        new: true
     }, function(err, promotion) {
         if(err) throw err;
 
@@ -68,5 +68,6 @@ promotionsRouter.route('/:promotionId')
         console.log(INFO + 'Deleted promotion with id ' + req.params.promotionId);
     });
 });
+
 
 module.exports = promotionsRouter;
