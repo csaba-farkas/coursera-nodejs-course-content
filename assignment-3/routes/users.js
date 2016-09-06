@@ -6,8 +6,16 @@ var Verify = require('./verify');
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/', Verify.verifyAdmin, function(req, res, next) {
+    //Task 3 in assignment: only admin users can retreive information about users
+    User.find({}, function(err, users) {
+        if(err) {
+            res.json(err);
+        } else {
+            res.json(users);
+            console.log("INFO: " + 'Users retured');
+        }
+    });
 });
 
 router.post('/register', function(req, res) {

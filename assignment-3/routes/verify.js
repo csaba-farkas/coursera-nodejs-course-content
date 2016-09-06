@@ -2,12 +2,16 @@ var User = require('../models/user');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 
+//Creates a token using the secret key of the config file and the user object.
+//Expiry is 1 hour
 exports.getToken= function(user) {
     return jwt.sign(user, config.secretKey, {
         expiresIn: 3600
     });
 };
 
+//Certain operations require administrator priviliges.
+//Function checks is user is admin by checking the admin flag in the mongodb document
 exports.verifyAdmin = function(req, res, next) {
     //Check header or url parameters or post parameters for token
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -17,7 +21,7 @@ exports.verifyAdmin = function(req, res, next) {
         //Verifies secret and check if token is expired
         jwt.verify(token, config.secretKey, function(err, decoded) {
             //If error or user is not admin, return error
-            if(err || !req.decoded._doc.admin) {
+            if(err || !decoded._doc.admin) {
                 var err = new Error('You are not authenticated!');
                 err.status = 401;
                 return next(err);
@@ -35,6 +39,7 @@ exports.verifyAdmin = function(req, res, next) {
     }
 };
 
+//Function checks if user is registered and logged into the system
 exports.verifyOrdinaryUser = function (req, res, next) {
     // check header or url parameters or post parameters for token
     var token = req.body.token || req.query.token || req.headers['x-access-token'];

@@ -22,25 +22,31 @@ dishRouter.route('/')
     //Content-Type is set automatically
     //HTTP code 200 will be set automatically
     Dishes.find({}, function(err, dish) {
-        if(err) throw err;
-        res.json(dish);
-        console.log(INFO + 'Dishes retured');
+        if(err) {
+            res.json(err);
+        } else {
+            res.json(dish);
+            console.log(INFO + 'Dishes retured');
+        }
     });
 })
 .post(Verify.verifyAdmin,function(req, res, next) {
     Dishes.create(req.body, function(err, dish) {
-        if(err) throw err;
+        if(err) {
+            res.json(err);
+        } else {
 
-        console.log('Dish created');
-        var id = dish._id;
-        //Set HTTP code to 201 - created
-        //Content-Type is set to text
-        //A message is attached to response with new dish's id
-        res.writeHead(201, {
-            'Content-Type':'text/plain'
-        });
-        res.end('Added the dish with id: ' + id);
-        console.log(INFO + 'Dishes created with id ' + id);
+            console.log('Dish created');
+            var id = dish._id;
+            //Set HTTP code to 201 - created
+            //Content-Type is set to text
+            //A message is attached to response with new dish's id
+            res.writeHead(201, {
+                'Content-Type':'text/plain'
+            });
+            res.end('Added the dish with id: ' + id);
+            console.log(INFO + 'Dishes created with id ' + id);
+        }
     });
 })
 .delete(Verify.verifyAdmin, function(req, res, next) {
@@ -49,9 +55,12 @@ dishRouter.route('/')
     //  1. Error -> throw it if exist
     //  2. Response -> a js object which is being returned by the server
     Dishes.remove({}, function(err, resp) {
-        if(err) throw err;
-        res.json(resp);
-        console.log(INFO + 'All dishes removed');
+        if(err) {
+            res.json(err);
+        } else {
+            res.json(resp);
+            console.log(INFO + 'All dishes removed');
+        }
     });
 });
 
