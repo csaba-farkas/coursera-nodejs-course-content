@@ -22,13 +22,13 @@ dishRouter.route('/')
     //Content-Type is set automatically
     //HTTP code 200 will be set automatically
     Dishes.find({})
-        .populate('comments.postedBy')
+        .populate('comment.postedBy')
         .exec(function(err, dish) {
             if(err) {
                 res.json(err);
             } else {
                 res.json(dish);
-                console.log(INFO + 'Dishes retured');
+                console.log(INFO + 'Dishes returned');
             }
         });
 })
@@ -73,7 +73,7 @@ dishRouter.route('/:dishId')
     //Use request.params.dishId
     //Return dish if found, if not throw error
     Dishes.findById(req.params.dishId)
-        .populate('comments.postedBy')
+        .populate('comment.postedBy')
         .exec(function(err, dish) {
             if(err) throw err;
             res.json(dish);
@@ -113,7 +113,7 @@ dishRouter.route('/:dishId/comments')
 .all(Verify.verifyOrdinaryUser)
 .get(function(req, res, next) {
     Dishes.findById(req.params.dishId)
-    .populate('comments.postedBy')
+    .populate('comment.postedBy')
     .exec(function(err, dish) {
         if(err) throw err;
         res.json(dish.comments);
@@ -124,7 +124,7 @@ dishRouter.route('/:dishId/comments')
         if(err) throw err;
 
         //Get user id of user leaving the comment
-        req.body.postedBy = rec.decoded._doc._id;
+        req.body.postedBy = req.decoded._doc._id;
 
         dish.comments.push(req.body);
         dish.save(function(err, dish) {
@@ -155,7 +155,7 @@ dishRouter.route('/:dishId/comments/:commentId')
 .all(Verify.verifyOrdinaryUser)
 .get(function (req, res, next) {
     Dishes.findById(req.params.dishId)
-    .populate('comments.postedBy')
+    .populate('comment.postedBy')
     .exec(function (err, dish) {
         if (err) throw err;
         res.json(dish.comments.id(req.params.commentId));
